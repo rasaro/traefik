@@ -1,0 +1,33 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: traefik:v2.1
+    ports:
+      - ${TRAEFIK_HTTP_PORT}:80
+      - ${TRAEFIK_HTTPS_PORT}:443
+      - ${TRAEFIK_DASHBOARD_PORT}:8080
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --api.debug=true
+      - --log.level=DEBUG
+      - --providers.docker=true
+      - --providers.docker.swarmMode=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=traefik
+      - --entrypoints.http.address=:${TRAEFIK_HTTP_PORT}
+      - --entrypoints.https.address=:${TRAEFIK_HTTPS_PORT}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.api.rule=Host(`traefik.localhost`)
+        - traefik.http.services.api.loadbalancer.server.port=${TRAEFIK_DASHBOARD_PORT}
+
+networks:
+  traefik:
+    external: true
