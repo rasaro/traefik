@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+  traefik:
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --api.debug=false
+      - --log.level=ERROR
+      - --providers.docker=true
+      - --providers.docker.swarmMode=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=traefik
+      - --entrypoints.http.address=:${TRAEFIK_HTTP_PORT}
+      - --entrypoints.https.address=:${TRAEFIK_HTTPS_PORT}
