@@ -35,10 +35,10 @@ services:
           - node.role == manager
       labels:
         - traefik.enable=true
-        - traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)
-        - traefik.http.routers.http-catchall.entrypoints=http
-        - traefik.http.routers.http-catchall.middlewares=redirect-to-https
-        - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+        - traefik.http.routers.http-to-https-redirect.rule=hostregexp(`{host:[a-z-.]+}`)
+        - traefik.http.routers.http-to-https-redirect.entrypoints=http
+        - traefik.http.routers.http-to-https-redirect.middlewares=redirect-to-https
+        - traefik.http.middlewares.http-to-https-redirect.redirectscheme.scheme=https
         - traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_DOMAIN}`)
         - traefik.http.routers.dashboard.entryPoints=https
         - traefik.http.routers.dashboard.tls=true
