@@ -13,9 +13,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${LETSENCRYPT_FOLDER}:/letsencrypt
     command:
-      - --api.insecure=true
+      - --api.insecure=false
       - --api.dashboard=true
-      - --api.debug=false
       - --log.level=ERROR
       - --providers.docker=true
       - --providers.docker.swarmMode=true
@@ -39,11 +38,12 @@ services:
         - traefik.http.routers.http-to-https-redirect.entrypoints=http
         - traefik.http.routers.http-to-https-redirect.middlewares=http-to-https-redirect
         - traefik.http.middlewares.http-to-https-redirect.redirectscheme.scheme=https
-        - traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_DOMAIN}`)
-        - traefik.http.routers.dashboard.entryPoints=https
-        - traefik.http.routers.dashboard.tls=true
-        - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
-        - traefik.http.services.dashboard.loadbalancer.server.port=${TRAEFIK_DASHBOARD_PORT}
+        - traefik.http.routers.api.rule=Host(`${TRAEFIK_API_DOMAIN}`)
+        - traefik.http.routers.api.service=api@internal
+        - traefik.http.routers.api.entryPoints=https
+        - traefik.http.routers.api.tls=true
+        - traefik.http.routers.api.tls.certresolver=letsencrypt
+        - traefik.http.services.api.loadbalancer.server.port=${TRAEFIK_API_PORT}
 
 networks:
   traefik:
