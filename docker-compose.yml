@@ -24,7 +24,7 @@ services:
       - --entrypoints.https.address=:${TRAEFIK_HTTPS_PORT}
       - --certificatesResolvers.letsencrypt.acme.email=${ACME_EMAIL}
       - --certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
-      - --certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=http
+      - --certificatesResolvers.letsencrypt.acme.tlsChallenge=true
 
     deploy:
       mode: replicated
