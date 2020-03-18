@@ -26,6 +26,7 @@ services:
       - --certificatesResolvers.letsencrypt.acme.email=${ACME_EMAIL}
       - --certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
       - --certificatesResolvers.letsencrypt.acme.httpChallenge.entryPoint=http
+
     deploy:
       mode: replicated
       replicas: 1
@@ -34,10 +35,15 @@ services:
           - node.role == manager
       labels:
         - traefik.enable=true
+        - traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)
+        - traefik.http.routers.http-catchall.entrypoints=http
+        - traefik.http.routers.http-catchall.middlewares=redirect-to-https
+        - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
         - traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_DOMAIN}`)
-        - traefik.http.services.dashboard.loadbalancer.server.port=${TRAEFIK_DASHBOARD_PORT}
+        - traefik.http.routers.dashboard.entryPoints=https
         - traefik.http.routers.dashboard.tls=true
         - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
+        - traefik.http.services.dashboard.loadbalancer.server.port=${TRAEFIK_DASHBOARD_PORT}
 
 networks:
   traefik:
