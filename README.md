@@ -19,44 +19,34 @@ cp .env.example .env
 
 Fill in fields in `.env`
 
-### Create docker network
+### Development mode
 
-#### Docker swarm
+Uses Docker compose
 
-```
-docker network create --driver=overlay traefik
-```
-
-#### Docker compose
+#### Create docker network
 
 ```
 docker network create traefik
 ```
 
+#### Run container
+
+```
+docker-compose up -d
+```
+
 ### Production mode
 
-#### Run in docker swarm mode
+Uses Docker swarm
+
+#### Create docker network
 
 ```
-docker stack deploy -c <(docker-compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.swarm.yml config) traefik
+docker network create --driver=overlay traefik
 ```
 
-#### Run in docker compose mode
+#### Run container
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-```
-
-### Development mode
-
-#### Run in docker swarm mode
-
-```
-docker stack deploy -c <(docker-compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.swarm.yml config) traefik
-```
-
-#### Run in docker compose mode
-
-```
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker stack deploy -c <(docker-compose -f docker-compose.prod.yml config) traefik
 ```
