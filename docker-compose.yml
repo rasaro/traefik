@@ -11,10 +11,18 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${LETSENCRYPT_FOLDER}:/letsencrypt
+      - ${LOG_PATH}:/var/log/traefik.log
+      - ${ACCESS_LOG_PATH}:/var/log/access.log
     command:
       - --api.insecure=false
       - --api.dashboard=true
-      - --log.level=ERROR
+      - --log.level=INFO
+      - --log.filepath=/var/log/traefik.log
+      - --log.format=json
+      - --accesslog=true
+      - --accesslog.filepath=/var/log/access.log
+      - --accesslog.bufferingsize=100
+      - --accesslog.format=json
       - --providers.docker=true
       - --providers.docker.swarmMode=true
       - --providers.docker.exposedByDefault=false
