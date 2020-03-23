@@ -27,9 +27,14 @@ services:
       - --providers.docker.swarmMode=true
       - --providers.docker.exposedByDefault=false
       - --providers.docker.network=traefik
+      - --metrics.prometheus=true
+      - --metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000
+      - --metrics.prometheus.addEntryPointsLabels=true
+      - --metrics.prometheus.addServicesLabels=true
+      - --metrics.prometheus.entrypoint=prometheus
+      - --entrypoints.prometheus.address=:8082
       - --entrypoints.http.address=:${TRAEFIK_HTTP_PORT}
       - --entrypoints.https.address=:${TRAEFIK_HTTPS_PORT}
-      - --entrypoints.minecraft.address=:25565
       - --certificatesResolvers.letsencrypt.acme.email=${ACME_EMAIL}
       - --certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
       - --certificatesResolvers.letsencrypt.acme.tlsChallenge=true
