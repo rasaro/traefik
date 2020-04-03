@@ -10,9 +10,9 @@ services:
       - ${TRAEFIK_HTTPS_PORT}:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${LETSENCRYPT_FOLDER}:/letsencrypt
-      - ${LOG_PATH}:/var/log/traefik.log
-      - ${ACCESS_LOG_PATH}:/var/log/access.log
+      - ${TRAEFIK_LETSENCRYPT_FOLDER}:/letsencrypt
+      - ${TRAEFIK_LOG_PATH}:/var/log/traefik.log
+      - ${TRAEFIK_ACCESS_LOG_PATH}:/var/log/access.log
     command:
       - --api.insecure=false
       - --api.dashboard=true
@@ -38,7 +38,7 @@ services:
       - --entrypoints.metrics.address=:8082
       - --entrypoints.http.address=:${TRAEFIK_HTTP_PORT}
       - --entrypoints.https.address=:${TRAEFIK_HTTPS_PORT}
-      - --certificatesResolvers.letsencrypt.acme.email=${ACME_EMAIL}
+      - --certificatesResolvers.letsencrypt.acme.email=${TRAEFIK_ACME_EMAIL}
       - --certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
       - --certificatesResolvers.letsencrypt.acme.tlsChallenge=true
     deploy:
@@ -53,7 +53,7 @@ services:
         - traefik.http.routers.http-to-https-redirect.entrypoints=http
         - traefik.http.routers.http-to-https-redirect.middlewares=http-to-https-redirect
         - traefik.http.middlewares.http-to-https-redirect.redirectscheme.scheme=https
-        - traefik.http.routers.api.rule=Host(`${TRAEFIK_API_DOMAIN}`)
+        - traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)
         - traefik.http.routers.api.service=api@internal
         - traefik.http.routers.api.entryPoints=https
         - traefik.http.routers.api.tls=true
