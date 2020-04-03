@@ -23,6 +23,9 @@ services:
       - --accesslog.filepath=/var/log/access.log
       - --accesslog.bufferingsize=100
       - --accesslog.format=json
+      - --accesslog.fields.defaultmode=keep
+      - --accesslog.fields.headers.defaultmode=keep
+      - --accesslog.fields.headers.names.Authorization=drop
       - --providers.docker=true
       - --providers.docker.swarmMode=true
       - --providers.docker.exposedByDefault=false
