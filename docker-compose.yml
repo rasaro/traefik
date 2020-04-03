@@ -6,8 +6,12 @@ services:
     networks:
       - traefik
     ports:
-      - ${TRAEFIK_HTTP_PORT}:80
-      - ${TRAEFIK_HTTPS_PORT}:443
+      - target: 80
+        published: ${TRAEFIK_HTTP_PORT}
+        mode: host
+      - target: 443
+        published: ${TRAEFIK_HTTPS_PORT}
+        mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${TRAEFIK_LETSENCRYPT_FOLDER}:/letsencrypt
